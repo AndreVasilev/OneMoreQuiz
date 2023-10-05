@@ -1,0 +1,137 @@
+openapi: 3.0.1
+servers:
+  - url: http://localhost:8080
+    description: localhost
+info:
+  title: OneMoreQuizAPI
+  version: '1.0'
+paths:
+  /question:
+    post:
+      tags:
+        - "question"
+      summary: 'Get questions list for current user'
+      requestBody:
+        description: 'A string with JSON object {"initData": ""}. The value of initData in this object should ba a value of window.Telegram.WebApp.initData'
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: string
+              example: '{"initData":"user%3D%7B%22id%22%3A12345678%2C%22first_name%22%3A%22John%22%2C%22last_name%22%3A%22Doe%22%2C%22username%22%3A%22johndoe%22%7D"}'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArrayOfQuestions'
+        '400':
+          description: Bad Request
+        '404':
+          description: Not found
+        '500':
+          description: Internal server error
+  /user:
+    post:
+      tags:
+        - "question"
+      summary: 'Get questions list for current user'
+      requestBody:
+        description: 'A string with JSON object {"initData": ""}. The value of initData in this object should ba a value of window.Telegram.WebApp.initData'
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: string
+              example: '{"initData":"user%3D%7B%22id%22%3A12345678%2C%22first_name%22%3A%22John%22%2C%22last_name%22%3A%22Doe%22%2C%22username%22%3A%22johndoe%22%7D"}'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Bad Request
+        '404':
+          description: Not found
+        '500':
+          description: Internal server error
+components:
+  schemas:
+    ArrayOfQuestions:
+      type: array
+      items:
+        $ref: '#/components/schemas/Question'
+    Question:
+      type: object
+      required:
+        - id
+        - A
+        - B
+        - C
+        - D
+        - question
+        - answer
+      properties:
+        id:
+          type: integer
+          format: int64
+          minimum: 0
+          description: 'Question ID'
+          example: 0
+        A:
+          type: string
+          description: 'A answer option'
+          example: 'potato'
+        B:
+          type: string
+          description: 'B answer option'
+          example: 'creamed corn'
+        C:
+          type: string
+          description: 'C answer option'
+          example: 'lemon custard'
+        D:
+          type: string
+          description: 'D answer option'
+          example: 'raspberry jelly'
+        answer:
+          type: string
+          enum: ['A', 'B', 'C', 'D']
+          description: 'The right answer option'
+          example: 'A'
+        question:
+          type: string
+          description: 'The question text'
+          example: 'A knish is traditionally stuffed with what filling?'
+    User:
+      type: object
+      required:
+        - id
+        - last_question_id
+        - score
+        - success_answers
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: 'User ID'
+          example: 1
+        last_question_id:
+          type: integer
+          format: int64
+          minimum: 0
+          description: 'Last viewed question ID'
+          example: 1
+        score:
+          type: integer
+          format: int64
+          minimum: 0
+          description: 'The users score'
+          example: 1
+        success_answers:
+          type: integer
+          format: int64
+          minimum: 0
+          description: 'Number of right (success) answers'
+          example: 1
